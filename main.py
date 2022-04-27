@@ -23,15 +23,27 @@ manager = SocketManager()
 templates = Jinja2Templates(directory="static/templates")
 
 @app.get("/")
-def root(request: Request):
+def get_home(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
 
+
 @app.get("/chat")
-def chat(request: Request):
+def get_chat(request: Request):
     return templates.TemplateResponse("chat.html", {"request": request})
 
+
+@app.get("/api/current_user")
+def get_user(request: Request):
+    return request.cookies.get("X-Authorization")
+
+
+@app.post("/api/register")
+def register_user(user, response: Response):
+    response.set_cookie(key="X-Authorization", value=user.username, httponly=True)
+
+
 # Create Endpoints:
-@app.websocket("/v1/api/chat")
+@app.websocket("/api/chat")
 async def chat(websocket: WebSocket):
     sender = websocket.cookies.get("X-Authorization")
     if sender:
@@ -48,17 +60,4 @@ async def chat(websocket: WebSocket):
             manager.disconnect(websocket, sender)
             response["message"] = "Disconnected..."
             await manager.broadcast(response)
-
-
-# Get cookie data:
-@app.get("/v1/api/current_user")
-def get_user(request: Request):
-    return request.cookies.get("X-Authorization")
-
-
-# Set cookie data:
-@app.post("/v1/api/register")
-def register_user(user: UserValidator, response: Response):
-    response.set_cookie(key="X-Authorization", value=user.username, httponly=True)
-
 

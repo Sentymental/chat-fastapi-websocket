@@ -13,7 +13,7 @@ class SocketManager:
     """
 
     def __init__(self):
-        self.active_connections: list[(WebSocket, str)] = []
+        self.active_connections: list[tuple[WebSocket, str]] = []
 
     async def connect(self, websocket: WebSocket, user: str):
         await websocket.accept()

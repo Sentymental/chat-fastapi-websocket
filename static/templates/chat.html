@@ -47,14 +47,13 @@
     <script>
         $(document).ready(function(){
             var current_user;
-            $.get("/v1/api/current_user",function(response){
+            $.get("/api/current_user",function(response){
                 current_user = response;
                 $("#profile").text(current_user);
             });
             var receiver = "";
-
             // create websocket
-            var socket = new WebSocket("ws://127.0.0.1:8000/v1/api/chat");
+            var socket = new WebSocket("ws://127.0.0.1:8000/api/chat");
             socket.onmessage = function(event) {
                 var parent = $("#messages");
                 var data = JSON.parse(event.data);
