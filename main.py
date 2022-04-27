@@ -5,9 +5,9 @@ and maintain connections
 """
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Response, Request
-from .schema.schemas import UserValidator
-from .dependency.dependencies import SocketManager
-
+from fastapi.templating import Jinja2Templates
+from schema.schemas import UserValidator
+from dependency.dependencies import SocketManager
 
 app = FastAPI(
     title="WebChat",
@@ -18,6 +18,17 @@ app = FastAPI(
 
 # Initialize Socket Manager
 manager = SocketManager()
+
+# Locate template:
+templates = Jinja2Templates(directory="static/templates")
+
+@app.get("/")
+def root(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
+
+@app.get("/chat")
+def chat(request: Request):
+    return templates.TemplateResponse("chat.html", {"request": request})
 
 # Create Endpoints:
 @app.websocket("/v1/api/chat")
