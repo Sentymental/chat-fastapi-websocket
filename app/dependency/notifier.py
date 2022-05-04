@@ -7,6 +7,12 @@ from fastapi import WebSocket
 from collections import defaultdict
 import logging
 
+logging.basicConfig(
+    filename="../logs/webchat.log",
+    level=logging.DEBUG,
+    format="%(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s",
+)
+
 
 class Notifier:
     """

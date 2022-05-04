@@ -18,7 +18,6 @@ from fastapi import (
 )
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from schema.schemas import UserValidator
 from dependency.notifier import Notifier
 
 from starlette.websockets import WebSocketDisconnect
@@ -39,14 +38,13 @@ app.add_middleware(
 )
 
 
-# Initialize Socket Manager
+# Initialize Notifier:
 notifier = Notifier()
 
-# Locate template:
-#app.mount("/static", StaticFiles(directory="static"), name="static")
+# Locate templates:
 templates = Jinja2Templates(directory="static/templates")
 
-
+# Endpoints:
 @app.get("/{room_name}/{user_name}")
 async def get(request: Request, room_name: str, user_name: str):
     return templates.TemplateResponse(
@@ -55,7 +53,7 @@ async def get(request: Request, room_name: str, user_name: str):
     )
 
 
-# Create Endpoints:
+# Create WebSocket Endpoints:
 @app.websocket("/ws/{room_name}")
 async def websocket_endpoint(
     websocket: WebSocket, room_name: str, background_tasks: BackgroundTasks
