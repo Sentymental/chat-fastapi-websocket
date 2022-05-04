@@ -43,7 +43,7 @@ app.add_middleware(
 notifier = Notifier()
 
 # Locate template:
-app.mount("/static", StaticFiles(directory="static"), name="static")
+#app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="static/templates")
 
 
@@ -84,4 +84,4 @@ async def websocket_endpoint(
 
 
 if __name__ == "__main__":
-    uvicorn.run(app)
+    uvicorn.run(app, port=8000, host="0.0.0.0")
